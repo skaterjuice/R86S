@@ -6,3 +6,7 @@ src-git-full telephony https://git.openwrt.org/feed/telephony.git;openwrt-22.03
 src-git store https://github.com/linkease/istore.git;main
 # argon, etc.
 src-git third https://github.com/jjm2473/openwrt-third.git;main
+src-link custom /usr/src/openwrt/custom-feed
+src-git helloworld https://github.com/fw876/helloworld
+src-git small https://github.com/kenzok8/small.git
+src-git passwall https://github.com/kenzok8/openwrt-packages.git
