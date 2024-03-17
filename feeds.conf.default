@@ -12,3 +12,6 @@ src-git oaf https://github.com/jjm2473/OpenAppFilter.git^fcfcaaa
 src-git linkease_nas https://github.com/linkease/nas-packages.git^3b9d5b2
 src-git linkease_nas_luci https://github.com/linkease/nas-packages-luci.git^e94cd4d
 src-git jjm2473_apps https://github.com/jjm2473/openwrt-apps.git^f709288
+src-link custom /usr/src/openwrt/custom-feed
+src-git small https://github.com/kenzok8/small.git
+src-git passwall https://github.com/kenzok8/openwrt-packages.git
