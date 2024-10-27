@@ -6,7 +6,7 @@ export_ota_url() {
 	case "$board" in
 	hlink,h28k|\
 	radxa,e20c|\
- 	radxa,e52c|\
+	radxa,e52c|\
 	easepi,ars4|\
 	lyt,t68m)
 		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS/${board##*,}"
@@ -14,6 +14,9 @@ export_ota_url() {
 	fastrhino,r66s|\
 	fastrhino,r68s)
 		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS/r6xs"
+		;;
+	friendlyelec,nanopi-r3s)
+		export -n OTA_URL_BASE="https://fw0.koolcenter.com/iStoreOS/r3s"
 		;;
 	friendlyelec,nanopi-r5c|\
 	friendlyelec,nanopi-r5s-c1|\

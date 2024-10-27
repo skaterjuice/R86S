@@ -153,6 +153,14 @@ $(call Device/rk3568)
 endef
 TARGET_DEVICES += easepi_ars4
 
+define Device/friendlyelec_nanopi-r3s
+$(call Device/rk3566)
+  DEVICE_VENDOR := FriendlyARM
+  DEVICE_MODEL := NanoPi R3S
+  DEVICE_PACKAGES := kmod-r8168
+endef
+TARGET_DEVICES += friendlyelec_nanopi-r3s
+
 define Device/friendlyarm_nanopi-r5s
 $(call Device/rk3568)
 $(call Device/rk3568_combined_friendlyelec)
@@ -356,6 +364,16 @@ $(call Device/rk3568)
   DEVICE_PACKAGES := kmod-r8125 kmod-nvme kmod-thermal
 endef
 TARGET_DEVICES += roc_k40pro
+
+define Device/roc_k50s
+$(call Device/rk3568)
+  DEVICE_VENDOR := ROCEOS
+  DEVICE_MODEL := K50S
+  DEVICE_DTS := rk3568-roc-k50s
+  SUPPORTED_DEVICES += roceos,k50s
+  DEVICE_PACKAGES := kmod-r8125 kmod-thermal
+endef
+TARGET_DEVICES += roc_k50s
 
 define Device/nlnet_xgp
 $(call Device/rk3568)

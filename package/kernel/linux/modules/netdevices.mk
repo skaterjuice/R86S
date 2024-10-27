@@ -45,6 +45,19 @@ endef
 $(eval $(call KernelPackage,alx))
 
 
+define KernelPackage/atlantic
+  SUBMENU:=$(NETWORK_DEVICES_MENU)
+  TITLE:=aQuantia AQtion(tm) Ethernet card support
+  DEPENDS:=@PCI_SUPPORT @TARGET_x86_64 +kmod-ptp +kmod-macsec
+  KCONFIG:= \
+	CONFIG_AQTION
+  FILES:=$(LINUX_DIR)/drivers/net/ethernet/aquantia/atlantic/atlantic.ko
+  AUTOLOAD:=$(call AutoProbe,atlantic)
+endef
+
+$(eval $(call KernelPackage,atlantic))
+
+
 define KernelPackage/atl2
   SUBMENU:=$(NETWORK_DEVICES_MENU)
   TITLE:=Atheros L2 Fast Ethernet support
@@ -1288,6 +1301,37 @@ define KernelPackage/mlx5-core/description
 endef
 
 $(eval $(call KernelPackage,mlx5-core))
+
+
+define KernelPackage/qed
+  TITLE:=QLogic QED 25/40/100Gb core driver
+  DEPENDS:=@PCI_SUPPORT +kmod-lib-zlib-inflate +kmod-lib-crc8 +qed-firmware
+  KCONFIG:= \
+	CONFIG_QED \
+	CONFIG_QED_SRIOV=y
+  HIDDEN:=1
+  FILES:=$(LINUX_DIR)/drivers/net/ethernet/qlogic/qed/qed.ko
+endef
+
+$(eval $(call KernelPackage,qed))
+
+
+define KernelPackage/qede
+  SUBMENU:=$(NETWORK_DEVICES_MENU)
+  TITLE:=QLogic QED 25/40/100Gb Ethernet NIC support
+  DEPENDS:=@PCI_SUPPORT +kmod-qed +kmod-ptp
+  KCONFIG:= \
+	CONFIG_QEDE
+  FILES:=$(LINUX_DIR)/drivers/net/ethernet/qlogic/qede/qede.ko
+  AUTOLOAD:=$(call AutoProbe,qede)
+endef
+
+define KernelPackage/qede/description
+  This driver supports QLogic QED 25/40/100Gb Ethernet NIC
+  devices.
+endef
+
+$(eval $(call KernelPackage,qede))
 
 
 define KernelPackage/qlcnic
