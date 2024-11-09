@@ -33,6 +33,7 @@ rockchip_setup_interfaces()
 	friendlyelec,nanopi-r5s|friendlyelec,nanopi-r5s-c1)
 		ucidef_set_interfaces_lan_wan "eth1 eth2" "eth0"
 		;;
+	easepi,r1|\
 	roceos,k40pro|\
 	lyt,t68m|\
 	fastrhino,r68s|\
@@ -57,6 +58,10 @@ rockchip_setup_interfaces()
 		;;
 	cyber,cyber3588-aib)
 		ucidef_set_interfaces_lan_wan "eth0" "eth1"
+		;;
+	linkfog,ala2)
+		ucidef_add_switch "switch0" \
+			"0:wan" "1:lan" "2:lan" "3:lan" "4:lan"  "7t@eth0"
 		;;
 	radxa,e54c)
 		ucidef_add_switch "switch0" \
@@ -93,6 +98,7 @@ rockchip_setup_macs()
 	case "$board" in
 	armsom,sige7-v1|\
 	easepi,ars4|\
+	easepi,r1|\
 	firefly,rk3568-roc-pc|\
 	friendlyelec,nanopi-r3s|\
 	friendlyelec,nanopi-r5s|\
@@ -114,6 +120,7 @@ rockchip_setup_macs()
 	jp,tvbox|\
 	panther,x2|\
 	dg,nas-lite|\
+	linkfog,ala2|\
 	lyt,t68m|\
 	mangopi,m28k|\
 	nlnet,xgp|\

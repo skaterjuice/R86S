@@ -46,6 +46,7 @@ define Trusted-Firmware-A/rk3588
   BUILD_SUBTARGET:=rk35xx
   ATF:=rk35/$(RK3588_ATF)
   DDR:=rk35/$(RK3588_DDR)
+  DDR1:=rk35/$(RK3588_DDR_LOWFREQ)
 endef
 
 TFA_TARGETS:= \
