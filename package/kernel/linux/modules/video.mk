@@ -495,6 +495,22 @@ endef
 
 $(eval $(call KernelPackage,drm-sched))
 
+define KernelPackage/drm-udl
+  SUBMENU:=$(VIDEO_MENU)
+  TITLE:=DisplayLink
+  DEPENDS:=+kmod-drm +kmod-backlight +kmod-drm-kms-helper
+  KCONFIG:=CONFIG_DRM_UDL
+  FILES:=$(LINUX_DIR)/drivers/gpu/drm/udl/udl.ko
+  AUTOLOAD:=$(call AutoProbe,udl)
+  $(call AddDepends/usb)
+endef
+
+define KernelPackage/drm-udl/description
+  This is a KMS driver for the USB displaylink video adapters.
+endef
+
+$(eval $(call KernelPackage,drm-udl))
+
 #
 # Video Capture
 #
@@ -1141,7 +1157,7 @@ $(eval $(call KernelPackage,video-gspca-konica))
 define KernelPackage/drm-i915
   SUBMENU:=$(VIDEO_MENU)
   TITLE:=Intel GPU drm support
-  DEPENDS:=@TARGET_x86 +kmod-drm-ttm +kmod-drm-kms-helper +i915-firmware
+  DEPENDS:=@TARGET_x86 +kmod-backlight +kmod-drm-ttm +kmod-drm-kms-helper +i915-firmware
   KCONFIG:= \
 	CONFIG_DRM_I915 \
 	CONFIG_DRM_I915_CAPTURE_ERROR=y \

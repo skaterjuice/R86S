@@ -13,26 +13,42 @@ EOF
 
 uci set dockerd.globals.data_root=/overlay/upper/opt/docker
 
-if [ ! -f /proc/device-tree/chosen/default-firewall ] || grep -qFw nas /proc/device-tree/chosen/default-firewall; then
+if grep -qFw nas /proc/device-tree/chosen/default-firewall; then
+    WAN_ZONE=`uci show firewall | grep -E '^firewall\.@zone\[[0-9]+\]\.name='"'wan'" | head -n1 | head -c -12`
+    uci -q batch <<-EOF >/dev/null
+        del_list dockerd.firewall.blocked_interfaces=wan
+        set ${WAN_ZONE}.input=ACCEPT
+        commit firewall
+EOF
+
     uci -q batch <<-EOF >/dev/null
         delete ucitrack.@wan_drop[-1]
         add ucitrack wan_drop
         set ucitrack.@wan_drop[-1].init=wan_drop
         commit ucitrack
 EOF
-
-if grep -qFw nas /proc/device-tree/chosen/default-firewall; then
-    WAN_ZONE=`uci show firewall | grep -E '^firewall\.@zone\[[0-9]+\]\.name=' | grep wan | head -n1 | head -c -12`
-    uci -q batch <<-EOF >/dev/null
-        del_list dockerd.firewall.blocked_interfaces=wan
-        set ${WAN_ZONE}.input=ACCEPT
-        commit firewall
+else
+    /etc/init.d/wan_drop disable
+    if grep -qFw dual /proc/device-tree/chosen/default-firewall; then
+        # firewall.allow_wan_input will auto enabled by /etc/hotplug.d/iface/19-fw-wan-input
+        uci -q batch <<-EOF >/dev/null
+            set firewall.allow_wan_input=rule
+            set firewall.allow_wan_input.name='Allow-WAN-Input'
+            set firewall.allow_wan_input.proto='all'
+            set firewall.allow_wan_input.src='wan'
+            set firewall.allow_wan_input.target='ACCEPT'
+            set firewall.allow_wan_input.enabled='0'
+            commit firewall
 EOF
+    fi
 fi
 
-    if [ -e /etc/config/minidlna ]; then
+if ! grep -qFw router /proc/device-tree/chosen/default-firewall; then
+
+    WAN_IF=`jsonfilter -i /etc/board.json -e '@.network.wan.device'`
+    if [ -n "$WAN_IF" -a -e /etc/config/minidlna ]; then
         uci -q batch <<-EOF >/dev/null
-            set minidlna.@minidlna[0].interface='br-lan,eth0'
+            set minidlna.@minidlna[0].interface='br-lan,$WAN_IF'
             commit minidlna
 EOF
     fi

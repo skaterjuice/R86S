@@ -5,6 +5,7 @@ export_ota_url() {
 	local board="$(board_name)"
 	case "$board" in
 	hlink,h28k|\
+	linkfog,ala2|\
 	radxa,e20c|\
 	radxa,e52c|\
 	easepi,ars4|\

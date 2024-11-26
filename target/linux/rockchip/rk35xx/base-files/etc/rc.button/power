@@ -45,6 +45,34 @@ if has_lcd_backlight; then
 	return 0
 fi
 
+power_key_factory_reset() {
+	[ -e /proc/device-tree/chosen/power-key-factory-reset ]
+}
+
+if power_key_factory_reset; then
+	case "$ACTION" in
+	pressed)
+		return 5
+	;;
+	timeout)
+		. /etc/diag.sh
+		set_state failsafe
+	;;
+	released)
+		if [ "$SEEN" -lt 1 ]
+		then
+			exec /sbin/poweroff
+		elif [ "$SEEN" -ge 5 ]
+		then
+			echo "FACTORY RESET" > /dev/console
+			firstboot -y && reboot &
+		fi
+	;;
+	esac
+
+	return 0
+fi
+
 [ "${ACTION}" = "released" ] || exit 0
 
 exec /sbin/poweroff

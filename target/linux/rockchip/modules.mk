@@ -1,7 +1,7 @@
 
 define KernelPackage/drm-rockchip-rk35xx
   SUBMENU:=$(VIDEO_MENU)
-  DEPENDS:=@TARGET_rockchip_rk35xx +kmod-drm +kmod-drm-kms-helper
+  DEPENDS:=@TARGET_rockchip_rk35xx +kmod-backlight +kmod-drm +kmod-drm-kms-helper
   TITLE:=DRM for rockchip RK35xx
   KCONFIG:=\
 	CONFIG_DRM_ROCKCHIP \
@@ -92,7 +92,7 @@ $(eval $(call KernelPackage,drm-rockchip-rk35xx-vvop))
 
 define KernelPackage/rknpu
   SUBMENU:=$(OTHER_MENU)
-  DEPENDS:=@TARGET_rockchip_rk35xx +kmod-drm
+  DEPENDS:=@TARGET_rockchip_rk35xx +kmod-backlight +kmod-drm
   TITLE:=Rockchip RKNPU driver
   KCONFIG:=\
 	CONFIG_ROCKCHIP_RKNPU \
