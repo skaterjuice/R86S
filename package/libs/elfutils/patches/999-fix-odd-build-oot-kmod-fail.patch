@@ -1,0 +1,21 @@
+Fix odd error when build OOT kernel modules
+
+```
+make[3]: Entering directory '/mnt/sata1-1/istoreos-build/x86_64/openwrt/build_dir/target-x86_64_musl/linux-x86_64/linux-5.10.221'
+make[4]: *** No rule to make target '/mnt/sata1-1/istoreos-build/x86_64/openwrt/build_dir/target-x86_64_musl/linux-x86_64/r8168-8.052.01/src/r8168_n.o', needed by '/mnt/sata1-1/istoreos-build/x86_64/openwrt/build_dir/target-x86_64_musl/linux-x86_64/r8168-8.052.01/src/r8168.o'.  Stop.
+make[3]: *** [Makefile:1832: /mnt/sata1-1/istoreos-build/x86_64/openwrt/build_dir/target-x86_64_musl/linux-x86_64/r8168-8.052.01/src] Error 2
+make[3]: Leaving directory '/mnt/sata1-1/istoreos-build/x86_64/openwrt/build_dir/target-x86_64_musl/linux-x86_64/linux-5.10.221'
+make[2]: *** [Makefile:49: /mnt/sata1-1/istoreos-build/x86_64/openwrt/build_dir/target-x86_64_musl/linux-x86_64/r8168-8.052.01/.built] Error 2
+make[2]: Leaving directory '/mnt/sata1-1/istoreos-build/x86_64/openwrt/package/kernel/r8168'
+```
+
+--- a/config/libelf.pc.in
++++ b/config/libelf.pc.in
+@@ -4,7 +4,6 @@ libdir=@libdir@
+ includedir=@includedir@
+ 
+ Name: libelf
+-Description: elfutils libelf library to read and write ELF files
+ Version: @VERSION@
+ URL: http://elfutils.org/
+ 

@@ -95,6 +95,7 @@ _get_overlay_partition_fallback()
 	log "get_overlay_partition_fallback"
 	rm -f /tmp/.bootdisk >/dev/null 2>&1
 	local overlay_dev=$(
+		. /lib/functions.sh
 		. /lib/upgrade/common.sh
 		export_bootdevice && export_partdevice overlay_dev 3 && echo $overlay_dev
 	)
@@ -105,6 +106,10 @@ _get_overlay_partition_fallback()
 
 get_overlay_partition()
 {
+	[ -e /.dockerenv ] && {
+		log "No overlay partition in Docker"
+		return 1
+	}
 	_get_overlay_partition_default || _get_overlay_partition_fallback || {
 		log "Unable to determine overlay partition"
 		return 1

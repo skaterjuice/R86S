@@ -15,6 +15,36 @@ get_iface_device() {
 	basename $(readlink /sys/class/net/$1/device)
 }
 
+device_to_iface() {
+	local device=$1
+	if [[ $device = *-*:* ]]; then
+		#usb
+		ls /sys/bus/usb/devices/$device/net/ | head -1
+	elif [[ $device = *:*:* ]]; then
+		#pci
+		ls /sys/bus/pci/devices/$device/net/ | head -1
+	else
+		#platform
+		ls /sys/devices/platform/$device/net/ | head -1
+	fi
+}
+
+reorder_eth() {
+	local index=0
+	local iface toiface
+	while [[ -n "$1" ]]; do
+		toiface="eth$index"
+		iface=$(device_to_iface $1)
+		if [[ -n "$iface" && "$iface" != "$toiface" ]]; then
+			rename_iface $toiface rename_tmp 2>/dev/null
+			rename_iface $iface $toiface
+			rename_iface rename_tmp $iface 2>/dev/null
+		fi
+		index=$(( $index + 1 ))
+		shift
+	done
+}
+
 set_iface_cpumask() {
 	local core_mask="$1"
 	local interface="$2"
@@ -116,8 +146,6 @@ board_fixup_iface_name() {
 		fi
 		;;
 	easepi,r1|\
-	roceos,k40pro|\
-	roceos,k50s|\
 	hinlink,opc-h68k)
 		device="$(get_iface_device eth1)"
 		if [[ "$device" = "fe010000.ethernet" ]]; then
@@ -181,12 +209,18 @@ board_fixup_iface_name() {
 			rename_iface lan eth1
 		fi
 		;;
+	*)
+		if [[ -s /proc/device-tree/eth_order ]]; then
+			reorder_eth $(cat /proc/device-tree/eth_order | tr ',' ' ' )
+		fi
+		;;
 	esac
 }
 
 board_set_iface_smp_affinity() {
 	case $(board_name) in
 	inspur,ihec301|\
+	ezpro,mrkaio-m68s|\
 	firefly,rk3568-roc-pc)
 		set_iface_cpumask 2 eth0
 		set_iface_cpumask 4 eth1
@@ -230,6 +264,7 @@ board_set_iface_smp_affinity() {
 	yyy,h1|\
 	armsom,sige1-v1|\
 	easepi,ars4|\
+	ezpro,mrkaio-m68s-plus|\
 	friendlyelec,nanopi-r5c|\
 	fastrhino,r66s|\
 	hinlink,hnas|\
@@ -322,11 +357,13 @@ board_set_iface_smp_affinity() {
 			set_iface_cpumask 5 eth1 eth1-0 a
 		fi
 		;;
+	easepi,r2|\
 	ynn,nas|\
 	le,hes30|\
 	jp,tvbox|\
 	panther,x2|\
 	dg,nas-lite|\
+	dg,tn3568|\
 	hsa,bh2)
 		set_iface_cpumask 2 "eth0"
 		;;

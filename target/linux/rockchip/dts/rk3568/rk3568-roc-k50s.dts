@@ -54,6 +54,7 @@
 		compatible = "ethernet-phy-ieee802.3-c22";
 		reg = <0x0>;
 		realtek,fiber;
+		realtek,led-data = <0x616b>;
 	};
 };
 
@@ -93,6 +94,7 @@
 		compatible = "ethernet-phy-ieee802.3-c22";
 		reg = <0x0>;
 		realtek,fiber;
+		realtek,led-data = <0x616b>;
 	};
 };
 

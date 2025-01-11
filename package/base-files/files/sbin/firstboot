@@ -31,7 +31,7 @@ confirm()
 
 do_reset_nofs()
 {
-  get_overlay_partition || return 1
+  get_overlay_partition || exit 1
 
   if [ -z "$OVERLAY_DEV" ]; then
     echo "Unable to determine overlay partition" >&2

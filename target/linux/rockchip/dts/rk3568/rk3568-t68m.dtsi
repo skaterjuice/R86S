@@ -30,11 +30,11 @@
 };
 
 &rgmii_phy0 {
-	led_status_value = <0x6940>;
+	realtek,led-data = <0x6151>;
 };
 
 &rgmii_phy1 {
-	led_status_value = <0x6940>;
+	realtek,led-data = <0x6151>;
 };
 
 &sdmmc2 {

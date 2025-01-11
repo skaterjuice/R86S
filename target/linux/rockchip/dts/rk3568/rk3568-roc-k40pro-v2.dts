@@ -1,0 +1,61 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+
+/dts-v1/;
+
+#include "rk3568-roc-k40pro.dtsi"
+
+/ {
+	compatible = "roceos,k40pro", "rockchip,rk3568";
+	model = "ROCEOS K40PRO";
+	eth_order = "fe010000.ethernet,fe2a0000.ethernet,0001:11:00.0,0002:21:00.0";
+	kdebug = "0";
+	hwmodel_id = "K40PRO";
+	r8168_led = <0x438>;
+	hw_support = "hdmi";
+
+	vcc3v3_pcie: vcc3v3-pcie {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc3v3_pcie";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		enable-active-high;
+		gpio = <&gpio0 RK_PC4 GPIO_ACTIVE_HIGH>;
+		startup-delay-us = <5000>;
+		vin-supply = <&vcc5v0_sys>;
+	};
+};
+
+&pcie2x1 {
+	vpcie3v3-supply = <&vcc3v3_pcie>;
+	reset-gpios = <&gpio3 RK_PC1 GPIO_ACTIVE_HIGH>;
+	status = "okay";
+};
+
+&pcie3x1 {
+	vpcie3v3-supply = <&vcc3v3_pcie>;
+	reset-gpios = <&gpio3 RK_PA3 GPIO_ACTIVE_HIGH>;
+	status = "okay";
+};
+
+&pcie3x2 {
+	vpcie3v3-supply = <&vcc3v3_pcie>;
+	reset-gpios = <&gpio3 RK_PA4 GPIO_ACTIVE_HIGH>;
+	status = "okay";
+};
+
+&vcc5v0_otg {
+	enable-active-high;
+	gpio = <&gpio0 RK_PA5 GPIO_ACTIVE_HIGH>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&vcc5v0_otg_en>;
+	/delete-property/ regulator-always-on;
+	/delete-property/ regulator-boot-on;
+};
+
+&pinctrl {
+	usb {
+		vcc5v0_otg_en: vcc5v0-otg-en {
+			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
+		};
+	};
+};

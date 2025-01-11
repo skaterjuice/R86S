@@ -1,30 +1,13 @@
-// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-/*
- * Copyright (c) 2020 Rockchip Electronics Co., Ltd.
- * Copyright (c) 2022 Flippy <flippy@sina.com>
- */
-
 /dts-v1/;
 
 #include "rk3568-roc-k40pro.dtsi"
 
 / {
-	compatible = "roceos,k40prov3", "rockchip,rk3568";
-	model = "ROCEOS K40PRO V3";
-	eth_order =  "fe010000.ethernet,fe2a0000.ethernet,0001:11:00.0,0000:01:00.0";
+	compatible = "easepi,r2", "rockchip,rk3568";
+	model = "EasePi R2";
 	kdebug = "0";
-	hwmodel_id = "K40PROV3";
-	r8168_led = <0x438>;
+	hwmodel_id = "R2";
 	hw_support = "hdmi";
-
-	pwr-net-25g {
-		compatible = "regulator-fixed";
-		pinctrl-names = "default";
-		pinctrl-0 = <&pwr_25g_en>;
-		regulator-name = "vcc-pwr-25g";
-		regulator-always-on;
-		vin-supply = <&vcc3v3_sys>;
-	};
 
 	vcc3v3_nvme: vcc3v3-nvme-regulator {
 		compatible = "regulator-fixed";
@@ -37,11 +20,24 @@
 		pinctrl-names = "default";
 		pinctrl-0 = <&vcc3v3_nvme_en>;
 	};
+
+};
+
+&gmac0 {
+	status = "disabled";
+};
+
+&gmac1 {
+	status = "disabled";
+};
+
+&sata0 {
+	status = "disabled";
 };
 
 //配置WL_REG_ON引脚
 &sdio_pwrseq {
-	status = "okay";
+	status = "disabled";
 	reset-gpios = <&gpio3 RK_PD5 GPIO_ACTIVE_LOW>;
 	post-power-on-delay-ms = <200>;
 };
@@ -52,7 +48,7 @@
 	pinctrl-0 = <&wifi_host_wake_irq>;
 	WIFI,host_wake_irq = <&gpio3 RK_PD4 GPIO_ACTIVE_HIGH>;
 	wifi_chip_type = "ap6255";
-	status = "okay";
+	status = "disabled";
 };
 
 &wireless_bluetooth {
@@ -64,10 +60,10 @@
 	pinctrl-names = "default", "rts_gpio";
 	pinctrl-0 = <&uart8m0_rtsn>;
 	pinctrl-1 = <&uart8_gpios>;
-	BT,reset_gpio    = <&gpio4 RK_PC4 GPIO_ACTIVE_HIGH>;
-	BT,wake_gpio     = <&gpio0 RK_PD5 GPIO_ACTIVE_HIGH>;
+	BT,reset_gpio	= <&gpio4 RK_PC4 GPIO_ACTIVE_HIGH>;
+	BT,wake_gpio	 = <&gpio0 RK_PD5 GPIO_ACTIVE_HIGH>;
 	BT,wake_host_irq = <&gpio0 RK_PD4 GPIO_ACTIVE_HIGH>;
-	status = "okay";
+	status = "disabled";
 };
 
 // wifi
@@ -84,7 +80,7 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&sdmmc2m0_bus4 &sdmmc2m0_cmd &sdmmc2m0_clk>;
 	sd-uhs-sdr104;
-	status = "okay";
+	status = "disabled";
 };
 
 /* fix mali warning */
@@ -93,13 +89,13 @@
 };
 
 &pcie2x1 {
-	rockchip,init-delay-ms = <100>;
 	reset-gpios = <&gpio3 RK_PA4 GPIO_ACTIVE_HIGH>;
 	status = "okay";
 };
 
 &pcie3x1 {
-	reset-gpios = <&gpio3 RK_PA3 GPIO_ACTIVE_HIGH>;
+	reset-gpios = <&gpio3 RK_PA1 GPIO_ACTIVE_HIGH>;
+	vpcie3v3-supply = <&vcc3v3_nvme>;
 	status = "okay";
 
 };
@@ -110,15 +106,38 @@
 	status = "okay";
 };
 
+&usbdrd_dwc3 {
+	status = "disabled";
+};
+
+&usbdrd30 {
+	status = "disabled";
+};
+
 &pinctrl {
-	pwr-25g {
-		pwr_25g_en: pwr-25g-en {
-			rockchip,pins = <3 RK_PB1 RK_FUNC_GPIO &pcfg_output_high>;
-		};
-	};
 	nvme {
 		vcc3v3_nvme_en: vcc3v3-nvme-en {
 			rockchip,pins = <0 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
 		};
 	};
+};
+
+&led_green {
+	gpios = <&gpio3 RK_PA3 GPIO_ACTIVE_HIGH>;
+	label = "power-key";
+	linux,default-trigger = "heartbeat";
+};
+
+&led_green_en {
+	rockchip,pins = <3 RK_PA3 RK_FUNC_GPIO &pcfg_pull_none>;
+};
+
+&i2c3 {
+	pinctrl-0 = <&i2c3m1_xfer>;
+
+	i2c-scl-rising-time-ns = <160>;
+	i2c-scl-falling-time-ns = <30>;
+	clock-frequency = <400000>;
+
+	status = "okay";
 };
