@@ -6,7 +6,3 @@ src-git-full telephony https://git.openwrt.org/feed/telephony.git;openwrt-22.03
 src-git store https://github.com/linkease/istore.git;main
 # argon, etc.
 src-git third https://github.com/jjm2473/openwrt-third.git;main
-src-git third_party https://github.com/linkease/istore-packages.git^0a8e5de
-src-git diskman https://github.com/jjm2473/luci-app-diskman.git^93f0730
-src-git oaf https://github.com/jjm2473/OpenAppFilter.git^fcfcaaa
-src-git jjm2473_apps https://github.com/jjm2473/openwrt-apps.git^f709288
